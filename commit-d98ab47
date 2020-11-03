@@ -1,0 +1,19 @@
+From d98ab4754c02782c02da8035f5d0cdb57cca5d5f Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Tue, 3 Nov 2020 14:55:43 -0500
+Subject: Revert "Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>"
+
+This reverts commit f4bd1362b085e87e7fb580837a90bf3967ce7ced.
+
+diff --git a/juicebox.module b/juicebox.module
+index ec87e85..8f832bd 100644
+--- a/juicebox.module
++++ b/juicebox.module
+@@ -31,6 +31,7 @@ function juicebox_theme() {
+  * Implements hook_theme_suggestions_HOOK_alter().
+  */
+ function juicebox_theme_suggestions_field_alter(array &$suggestions, array $variables) {
++  // Some themes (e.g. Bartik) style fields in special ways that breaks
+   // Juicebox output. Specifically they target a theme-specific selector,
+   // that identifies the field type (e.g. "field-type-image"), with special CSS.
+   // This CSS often assumes an inline list of images that have layout/width is
