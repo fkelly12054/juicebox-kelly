@@ -1,0 +1,13 @@
+juicebox:
+  js: {}
+juicebox.local:
+  js:
+    js/juicebox_load.js: {}
+  css:
+    theme:
+      component:
+        css/juicebox_styles.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
