@@ -1,0 +1,21 @@
+From 484927478bf88c16169496b0f081eb57eb1d1bfe Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Tue, 3 Nov 2020 17:06:38 -0500
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> testing
+ patch process
+
+
+diff --git a/juicebox.module b/juicebox.module
+index 824c7fb..649352f 100644
+--- a/juicebox.module
++++ b/juicebox.module
+@@ -27,9 +27,6 @@ function juicebox_theme() {
+   ];
+ }
+ 
+-/**
+- * Implements hook_theme_suggestions_HOOK_alter().
+- */
+ function juicebox_theme_suggestions_field_alter(array &$suggestions, array $variables) {
+   // juicebox output. Specifically they target a theme-specific selector,
+   // that identifies the field type (e.g. "field-type-image"), with special CSS.
