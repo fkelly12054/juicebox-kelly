@@ -1,13 +1,10 @@
 From 86ecea7320bedbde7c7450d2a2932045baba2b08 Mon Sep 17 00:00:00 2001
 From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
 Date: Tue, 3 Nov 2020 15:55:54 -0500
-Subject: [PATCH] Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
- one letter change
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> one
+ letter change
 
 Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
----
- juicebox.module | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/juicebox.module b/juicebox.module
 index ec87e85..824c7fb 100644
@@ -22,6 +19,3 @@ index ec87e85..824c7fb 100644
    // that identifies the field type (e.g. "field-type-image"), with special CSS.
    // This CSS often assumes an inline list of images that have layout/width is
    // being renderd, and apply float or table positioning on the field wrapper.
--- 
-2.29.2.windows.1
-
