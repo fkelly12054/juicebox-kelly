@@ -14,8 +14,8 @@ index ec87e85..824c7fb 100644
 --- a/juicebox.module
 +++ b/juicebox.module
 @@ -31,7 +31,7 @@ function juicebox_theme() {
-  * Implements hook_theme_suggestions_HOOK_alter().
-  */
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
  function juicebox_theme_suggestions_field_alter(array &$suggestions, array $variables) {
 -  // Juicebox output. Specifically they target a theme-specific selector,
 +  // juicebox output. Specifically they target a theme-specific selector,
