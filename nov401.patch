@@ -1,0 +1,38 @@
+From 58a6c5cfd8831a29689437a75110f8d7dd491c63 Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Tue, 3 Nov 2020 17:11:24 -0500
+Subject: [PATCH] Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
+ more and more
+
+---
+ commit-4849274 | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 commit-4849274
+
+diff --git a/commit-4849274 b/commit-4849274
+new file mode 100644
+index 0000000..896b3a2
+--- /dev/null
++++ b/commit-4849274
+@@ -0,0 +1,21 @@
++From 484927478bf88c16169496b0f081eb57eb1d1bfe Mon Sep 17 00:00:00 2001
++From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
++Date: Tue, 3 Nov 2020 17:06:38 -0500
++Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> testing
++ patch process
++
++
++diff --git a/juicebox.module b/juicebox.module
++index 824c7fb..649352f 100644
++--- a/juicebox.module
+++++ b/juicebox.module
++@@ -27,9 +27,6 @@ function juicebox_theme() {
++   ];
++ }
++
++-/**
++- * Implements hook_theme_suggestions_HOOK_alter().
++- */
++ function juicebox_theme_suggestions_field_alter(array &$suggestions, array $variables) {
++   // juicebox output. Specifically they target a theme-specific selector,
++   // that identifies the field type (e.g. "field-type-image"), with special CSS.
