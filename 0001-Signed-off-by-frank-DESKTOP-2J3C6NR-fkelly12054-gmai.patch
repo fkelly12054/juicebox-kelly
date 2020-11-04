@@ -29,7 +29,7 @@ index 0000000..896b3a2
 +@@ -27,9 +27,6 @@ function juicebox_theme() {
 +   ];
 + }
-+ 
++
 +-/**
 +- * Implements hook_theme_suggestions_HOOK_alter().
 +- */
