@@ -1,13 +1,10 @@
 From e20147efc5b9f8c359c069e1c10b7b9ceec19cad Mon Sep 17 00:00:00 2001
 From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
 Date: Wed, 4 Nov 2020 14:39:03 -0500
-Subject: [PATCH] Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
- reset module
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> reset
+ module
 
 Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
----
- juicebox.module | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/juicebox.module b/juicebox.module
 index a185c52..649352f 100644
@@ -22,6 +19,3 @@ index a185c52..649352f 100644
  use Drupal\Core\Form\FormStateInterface;
  use Drupal\juicebox\JuiceboxGalleryInterface;
  
--- 
-2.29.2.windows.1
-
