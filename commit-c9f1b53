@@ -1,0 +1,53 @@
+From c9f1b53cb7e0157390a84fb426b3444551a90188 Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Wed, 4 Nov 2020 09:53:30 -0500
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> changes
+ render
+
+Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
+
+diff --git a/commit-c52ec7f b/commit-c52ec7f
+new file mode 100644
+index 0000000..498b22a
+--- /dev/null
++++ b/commit-c52ec7f
+@@ -0,0 +1,20 @@
++From c52ec7ffb2742ab103763da0544b99c75ce0a988 Mon Sep 17 00:00:00 2001
++From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
++Date: Wed, 4 Nov 2020 09:49:10 -0500
++Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> one
++ change
++
++
++diff --git a/juicebox.module b/juicebox.module
++index 649352f..a185c52 100644
++--- a/juicebox.module
+++++ b/juicebox.module
++@@ -5,7 +5,7 @@
++  * Module file for Juicebox.
++  */
++ 
++-use Drupal\Core\Render\Element;
+++use Drupal\Core\Render\Somechange;
++ use Drupal\Core\Form\FormStateInterface;
++ use Drupal\juicebox\JuiceboxGalleryInterface;
++ 
+diff --git a/patch0.patch b/patch0.patch
+new file mode 100644
+index 0000000..088750a
+--- /dev/null
++++ b/patch0.patch
+@@ -0,0 +1,13 @@
++diff --git b/juicebox.module a/juicebox.module
++index a185c52..649352f 100644
++--- b/juicebox.module
+++++ a/juicebox.module
++@@ -5,7 +5,7 @@
++  * Module file for Juicebox.
++  */
++ 
++-use Drupal\Core\Render\Somechange;
+++use Drupal\Core\Render\Element;
++ use Drupal\Core\Form\FormStateInterface;
++ use Drupal\juicebox\JuiceboxGalleryInterface;
++ 
