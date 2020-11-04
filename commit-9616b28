@@ -1,0 +1,26 @@
+From 9616b28ce10119f55f35d39427bfda6e8b7bdb08 Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Wed, 4 Nov 2020 15:30:13 -0500
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> reimport
+ juicebox module
+
+Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
+
+diff --git a/juicebox.module b/juicebox.module
+index 649352f..8f832bd 100644
+--- a/juicebox.module
++++ b/juicebox.module
+@@ -27,8 +27,12 @@ function juicebox_theme() {
+   ];
+ }
+ 
++/**
++ * Implements hook_theme_suggestions_HOOK_alter().
++ */
+ function juicebox_theme_suggestions_field_alter(array &$suggestions, array $variables) {
+-  // juicebox output. Specifically they target a theme-specific selector,
++  // Some themes (e.g. Bartik) style fields in special ways that breaks
++  // Juicebox output. Specifically they target a theme-specific selector,
+   // that identifies the field type (e.g. "field-type-image"), with special CSS.
+   // This CSS often assumes an inline list of images that have layout/width is
+   // being renderd, and apply float or table positioning on the field wrapper.
