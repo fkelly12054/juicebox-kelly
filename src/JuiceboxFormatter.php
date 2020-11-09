@@ -2,6 +2,7 @@
 
 namespace Drupal\juicebox;
 
+use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -10,7 +11,6 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 
@@ -69,6 +69,13 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
   static protected $library = [];
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -81,17 +88,20 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_manager
    *   A module manager service.
    * @param \Drupal\Core\Path\CurrentPathStack $currentPathStack
-   *   A currnet path service.
+   *   A current path service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The Symfony request stack from which to extract the current request.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger_interface
+   *   The messenger interface.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack) {
+  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack, MessengerInterface $messenger_interface) {
     $this->configFactory = $config_factory;
     $this->stringTranslation = $translation;
     $this->urlGenerator = $url_generator;
     $this->moduleManager = $module_manager;
     $this->currentPathStack = $currentPathStack;
     $this->request = $request_stack->getCurrentRequest();
+    $this->messenger = $messenger_interface;
   }
 
   /**
@@ -145,7 +155,6 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       // local detection and build our own libraries array.
       $query = \Drupal::request()->query->all();
       if (!empty($query['jb-version']) && !$force_local) {
-        juicebox_library_info($library);
         $version_number = Html::escape($query['jb-version']);
         if (!empty($query['jb-pro'])) {
           $library['pro'] = TRUE;
@@ -154,13 +163,25 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
         else {
           $version = 'Lite';
         }
-        $library['version'] = $version . ' ' . $version_number;
-        juicebox_library_post_detect($library);
       }
-      // Otherwise we just use the Libraries API to detect the local lib.
-      else {
-        $library = libraries_detect('juicebox');
-      }
+    }
+    // We "default" to sites/all/libraries and that will override
+    // anything in /libraries. Rationale is that sites/all/libraries
+    //  was the original location for these files theoretically,
+    // we could check the versions of both and pick the one
+    // with the highest version not sure the juice(box) is worth the squeeze.
+    if (file_exists(DRUPAL_ROOT . '/' . 'sites/all/libraries/juicebox/juicebox.js')) {
+      $librarypath = '/sites/all/libraries/juicebox/juicebox.js';
+    }
+    elseif (file_exists(DRUPAL_ROOT . '/' . 'libraries/juicebox/juicebox.js')) {
+      $librarypath = '/libraries/juicebox/juicebox.js';
+    }
+    if (isset($librarypath)) {
+      juicebox_build_library_array($librarypath, $library);
+    }
+    else {
+      $notification_top = t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
+      $this->messenger->addError($notification_top);
     }
     return $library;
   }
@@ -368,7 +389,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     ] as $name) {
       if (isset($settings[$name])) {
         $name_real = str_replace('jlib_', '', $name);
-        $gallery->addOption(Unicode::strtolower($name_real), trim(Html::escape($settings[$name])));
+        $gallery->addOption(mb_strtolower($name_real), trim(Html::escape($settings[$name])));
       }
     }
     // Get the bool options set via the GUI.
@@ -377,7 +398,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     ] as $name) {
       if (isset($settings[$name])) {
         $name_real = str_replace('jlib_', '', $name);
-        $gallery->addOption(Unicode::strtolower($name_real), (!empty($settings[$name]) ? 'TRUE' : 'FALSE'));
+        $gallery->addOption(mb_strtolower($name_real), (!empty($settings[$name]) ? 'TRUE' : 'FALSE'));
       }
     }
     // Merge-in the manually assigned options making sure they take priority
@@ -393,7 +414,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
           $matches = [];
           preg_match('/^([A-Za-z0-9]+?)="([^"]+?)"$/u', $option, $matches);
           list($full_match, $name, $value) = $matches;
-          $gallery->addOption(Unicode::strtolower($name), Html::escape($value));
+          $gallery->addOption(mb_strtolower($name), Html::escape($value));
         }
       }
     }
@@ -446,7 +467,9 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     // If the library itself is not installed, display formal error message.
     else {
       $notification_top = t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
-      drupal_set_message($notification_top, 'error');
+      $this->messenger->addError($notification_top);
+      $form['#pre_render'] = ['juicebox_form_pre_render_fieldsets'];
+      return $form;
     }
     $form['juicebox_config'] = [
       '#type' => 'details',
