@@ -21,30 +21,6 @@ index b63d020..b18fab4 100644
 +   Link: http://juicebox.net/
  
  
- CONFIGURATION
-diff --git a/juicebox.info.yml b/juicebox.info.yml
-index 5fde3e3..9b8a9f1 100644
---- a/juicebox.info.yml
-+++ b/juicebox.info.yml
-@@ -7,4 +7,3 @@ configure: juicebox.admin_settings
- dependencies:
-   - drupal:file
-   - drupal:image
--  - libraries:libraries
-diff --git a/juicebox.libraries.yml b/juicebox.libraries.yml
-index ae1ecc3..a1f78dc 100644
---- a/juicebox.libraries.yml
-+++ b/juicebox.libraries.yml
-@@ -1,8 +1,7 @@
--juicebox:
--  js: {}
- juicebox.local:
-   js:
-     js/juicebox_load.js: {}
-+    /libraries/juicebox/juicebox.js: {}
-   css:
-     theme:
-       component:
 diff --git a/juicebox.module b/juicebox.module
 index 8f832bd..ea48ef1 100644
 --- a/juicebox.module
