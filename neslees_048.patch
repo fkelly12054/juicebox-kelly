@@ -1,26 +1,3 @@
-diff --git a/README.txt b/README.txt
-index b63d020..b18fab4 100644
---- a/README.txt
-+++ b/README.txt
-@@ -26,12 +26,17 @@ http://drupal.org/project/juicebox
- 
- REQUIREMENTS
- ------------
--This module has dependency on file,image and libraries module.
-+This module has dependency on file and image module.
- 
- 
- INSTALLATION
- ------------
--Install as normal (see http://drupal.org/documentation/install/modules-themes).
-+1. Install as normal (see http://drupal.org/documentation/install/modules-themes).
-+
-+2. Download and unpack the Juicebox plugin in "libraries" inside root folder.
-+   Make sure the path to the plugin file becomes:
-+    "libraries/juicebox/juicebox.js"
-+   Link: http://juicebox.net/
- 
- 
 diff --git a/juicebox.module b/juicebox.module
 index 8f832bd..ea48ef1 100644
 --- a/juicebox.module
