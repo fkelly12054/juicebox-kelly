@@ -146,8 +146,6 @@ function juicebox_build_library_array($librarypath, &$library)
 }
 
 /**
-
-/**
  * Form validation callback: validate width/height inputs.
  */
 function juicebox_element_validate_dimension($element, FormStateInterface $form_state, $form) {
