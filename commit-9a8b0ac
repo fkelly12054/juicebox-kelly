@@ -1,0 +1,21 @@
+From 9a8b0ac16f37e4f2d281f95ffcb4d52c593203ce Mon Sep 17 00:00:00 2001
+From: "frank@DESKTOP-2J3C6NR" <fkelly12054@gmail.com>
+Date: Mon, 9 Nov 2020 15:32:03 -0500
+Subject: Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com> more
+ module changes
+
+Signed-off-by: frank@DESKTOP-2J3C6NR <fkelly12054@gmail.com>
+
+diff --git a/juicebox.module b/juicebox.module
+index f45b21d..6799133 100644
+--- a/juicebox.module
++++ b/juicebox.module
+@@ -145,8 +145,6 @@ function juicebox_build_library_array($librarypath, &$library)
+   return ($library);
+ }
+ 
+-/**
+-
+ /**
+  * Form validation callback: validate width/height inputs.
+  */
