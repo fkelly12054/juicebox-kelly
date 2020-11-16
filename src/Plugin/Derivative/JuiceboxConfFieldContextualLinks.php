@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides dynamic contextual links for Juicebox field conf editing.
@@ -54,7 +55,7 @@ class JuiceboxConfFieldContextualLinks extends DeriverBase implements ContainerD
       if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
         $bundle_entity_type = $entity_type->getBundleEntityType();
         $type_name = $bundle_entity_type == 'bundle' ? $entity_type_id : $bundle_entity_type;
-        $this->derivatives['juicebox.conf_field_' . $entity_type_id]['title'] = t('Configure galleries of this field instance');
+        $this->derivatives['juicebox.conf_field_' . $entity_type_id]['title'] = $this->t('Configure galleries of this field instance');
         $this->derivatives['juicebox.conf_field_' . $entity_type_id]['route_name'] = 'entity.entity_view_display.' . $entity_type_id . '.view_mode';
         $this->derivatives['juicebox.conf_field_' . $entity_type_id]['group'] = 'juicebox_conf_field_' . $entity_type_id;
       }

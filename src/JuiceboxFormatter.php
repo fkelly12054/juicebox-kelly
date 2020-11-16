@@ -13,6 +13,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to define a Drupal service with common formatter methods.
@@ -132,7 +133,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     if ($gallery instanceof JuiceboxGalleryInterface) {
       return $gallery;
     }
-    throw new \Exception(t('Cound not instantiate Juicebox gallery.'));
+    throw new \Exception('Cound not instantiate Juicebox gallery.');
   }
 
   /**
@@ -154,6 +155,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       // See if we have been passed version details in the URL. If so we bypass
       // local detection and build our own libraries array.
       $query = \Drupal::request()->query->all();
+      var_dump($query);
       if (!empty($query['jb-version']) && !$force_local) {
         $version_number = Html::escape($query['jb-version']);
         if (!empty($query['jb-pro'])) {
@@ -167,7 +169,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     }
     // We "default" to sites/all/libraries and that will override
     // anything in /libraries. Rationale is that sites/all/libraries
-    //  was the original location for these files theoretically,
+    // was the original location for these files theoretically,
     // we could check the versions of both and pick the one
     // with the highest version not sure the juice(box) is worth the squeeze.
     if (file_exists(DRUPAL_ROOT . '/' . 'sites/all/libraries/juicebox/juicebox.js')) {
@@ -180,7 +182,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       juicebox_build_library_array($librarypath, $library);
     }
     else {
-      $notification_top = t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
+      $notification_top = $this->t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
       $this->messenger->addError($notification_top);
     }
     return $library;
@@ -455,25 +457,25 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       // If we don't have a known version of the Juicebox library, just show a
       // generic warning.
       if (empty($library['version'])) {
-        $notification_top = t('<strong>Notice:</strong> Your Juicebox Library version could not be detected. Some options below may not function correctly.');
+        $notification_top = $this->t('<strong>Notice:</strong> Your Juicebox Library version could not be detected. Some options below may not function correctly.');
       }
       // If this version does not support some LITE optins, show a message.
       elseif (!empty($library['disallowed_conf'])) {
         $disallowed_conf = $library['disallowed_conf'];
-        $notification_top = t('<strong>Notice:</strong> You are currently using Juicebox library version <strong>@version</strong> which is not compatible with some of the options listed below. These options will appear disabled until you upgrade to the most recent Juicebox library version.', ['@version' => $library['version']]);
-        $notification_label = t('&nbsp;(not available in @version)', ['@version' => $library['version']]);
+        $notification_top = $this->t('<strong>Notice:</strong> You are currently using Juicebox library version <strong>@version</strong> which is not compatible with some of the options listed below. These options will appear disabled until you upgrade to the most recent Juicebox library version.', ['@version' => $library['version']]);
+        $notification_label = $this->t('&nbsp;(not available in @version)', ['@version' => $library['version']]);
       }
     }
     // If the library itself is not installed, display formal error message.
     else {
-      $notification_top = t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
+      $notification_top = $this->t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
       $this->messenger->addError($notification_top);
       $form['#pre_render'] = ['juicebox_form_pre_render_fieldsets'];
       return $form;
     }
     $form['juicebox_config'] = [
       '#type' => 'details',
-      '#title' => t('Juicebox Library - Lite Config'),
+      '#title' => $this->t('Juicebox Library - Lite Config'),
       '#open' => FALSE,
       '#description' => !empty($notification_top) ? '<p>' . $notification_top . '</p>' : '',
       '#weight' => 10,
@@ -481,122 +483,122 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     $form['jlib_galleryWidth'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'textfield',
-      '#title' => t('Gallery Width'),
-      '#description' => t('Set the gallery width in a standard numeric format (such as 100% or 300px).'),
+      '#title' => $this->t('Gallery Width'),
+      '#description' => $this->t('Set the gallery width in a standard numeric format (such as 100% or 300px).'),
       '#element_validate' => ['juicebox_element_validate_dimension'],
     ];
     $form['jlib_galleryHeight'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'textfield',
-      '#title' => t('Gallery Height'),
-      '#description' => t('Set the gallery height in a standard numeric format (such as 100% or 300px).'),
+      '#title' => $this->t('Gallery Height'),
+      '#description' => $this->t('Set the gallery height in a standard numeric format (such as 100% or 300px).'),
       '#element_validate' => ['juicebox_element_validate_dimension'],
     ];
     $form['jlib_backgroundColor'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'textfield',
-      '#title' => t('Background Color'),
-      '#description' => t('Set the gallery background color as a CSS3 color value (such as rgba(10,50,100,0.7) or #FF00FF).'),
+      '#title' => $this->t('Background Color'),
+      '#description' => $this->t('Set the gallery background color as a CSS3 color value (such as rgba(10,50,100,0.7) or #FF00FF).'),
     ];
     $form['jlib_textColor'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'textfield',
-      '#title' => t('Text Color'),
-      '#description' => t('Set the color of all gallery text as a CSS3 color value (such as rgba(255,255,255,1) or #FF00FF).'),
+      '#title' => $this->t('Text Color'),
+      '#description' => $this->t('Set the color of all gallery text as a CSS3 color value (such as rgba(255,255,255,1) or #FF00FF).'),
     ];
     $form['jlib_thumbFrameColor'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'textfield',
-      '#title' => t('Thumbnail Frame Color'),
-      '#description' => t('Set the color of the thumbnail frame as a CSS3 color value (such as rgba(255,255,255,.5) or #FF00FF).'),
+      '#title' => $this->t('Thumbnail Frame Color'),
+      '#description' => $this->t('Set the color of the thumbnail frame as a CSS3 color value (such as rgba(255,255,255,.5) or #FF00FF).'),
     ];
     $form['jlib_showOpenButton'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'checkbox',
-      '#title' => t('Show Open Image Button'),
-      '#description' => t('Whether to show the "Open Image" button. This will link to the full size version of the image within a new tab to facilitate downloading.'),
+      '#title' => $this->t('Show Open Image Button'),
+      '#description' => $this->t('Whether to show the "Open Image" button. This will link to the full size version of the image within a new tab to facilitate downloading.'),
     ];
     $form['jlib_showExpandButton'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'checkbox',
-      '#title' => t('Show Expand Button'),
-      '#description' => t('Whether to show the "Expand" button. Clicking this button expands the gallery to fill the browser window.'),
+      '#title' => $this->t('Show Expand Button'),
+      '#description' => $this->t('Whether to show the "Expand" button. Clicking this button expands the gallery to fill the browser window.'),
     ];
     $form['jlib_useFullscreenExpand'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'checkbox',
-      '#title' => t('Use Fullscreen Expand'),
-      '#description' => t('Whether to trigger fullscreen mode when clicking the expand button (for supported browsers).'),
+      '#title' => $this->t('Use Fullscreen Expand'),
+      '#description' => $this->t('Whether to trigger fullscreen mode when clicking the expand button (for supported browsers).'),
     ];
     $form['jlib_showThumbsButton'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'checkbox',
-      '#title' => t('Show Thumbs Button'),
-      '#description' => t('Whether to show the "Toggle Thumbnails" button.'),
+      '#title' => $this->t('Show Thumbs Button'),
+      '#description' => $this->t('Whether to show the "Toggle Thumbnails" button.'),
     ];
     $form['jlib_useThumbDots'] = [
       '#jb_fieldset' => 'juicebox_config',
       '#type' => 'checkbox',
-      '#title' => t('Show Thumbs Dots'),
-      '#description' => t('Whether to replace the thumbnail images with small dots.'),
+      '#title' => $this->t('Show Thumbs Dots'),
+      '#description' => $this->t('Whether to replace the thumbnail images with small dots.'),
     ];
     $form['juicebox_manual_config'] = [
       '#type' => 'details',
-      '#title' => t('Juicebox Library - Pro / Manual Config'),
+      '#title' => $this->t('Juicebox Library - Pro / Manual Config'),
       '#open' => FALSE,
-      '#description' => t('Specify any additional Juicebox library configuration options (such as "Pro" options) here.<br/>Options set here always take precedence over those set in the "Lite" options above if there is a conflict.'),
+      '#description' => $this->t('Specify any additional Juicebox library configuration options (such as "Pro" options) here.<br/>Options set here always take precedence over those set in the "Lite" options above if there is a conflict.'),
       '#weight' => 20,
     ];
     $form['manual_config'] = [
       '#jb_fieldset' => 'juicebox_manual_config',
       '#type' => 'textarea',
-      '#title' => t('Pro / Manual Configuraton Options'),
-      '#description' => t('Add one option per line in the format <strong>optionName="optionValue"</strong><br/>See also: http://www.juicebox.net/support/config_options'),
+      '#title' => $this->t('Pro / Manual Configuraton Options'),
+      '#description' => $this->t('Add one option per line in the format <strong>optionName="optionValue"</strong><br/>See also: http://www.juicebox.net/support/config_options'),
       '#element_validate' => ['juicebox_element_validate_config'],
     ];
     $form['advanced'] = [
       '#type' => 'details',
-      '#title' => t('Juicebox - Advanced Options'),
+      '#title' => $this->t('Juicebox - Advanced Options'),
       '#open' => FALSE,
       '#weight' => 30,
     ];
     $form['incompatible_file_action'] = [
       '#jb_fieldset' => 'advanced',
       '#type' => 'select',
-      '#title' => t('Incompatible File Type Handling'),
+      '#title' => $this->t('Incompatible File Type Handling'),
       '#options' => [
-        'skip' => 'Bypass incompatible files',
-        'show_icon' => 'Show mimetype icon placehoder',
-        'show_icon_and_link' => 'Show mimetype icon placholder and link to file',
+        'skip' => $this->t('Bypass incompatible files'),
+        'show_icon' => $this->t('Show mimetype icon placehoder'),
+        'show_icon_and_link' => $this->t('Show mimetype icon placholder and link to file'),
       ],
-      '#empty_option' => t('Do nothing'),
-      '#description' => t('Specify any special handling that should be applied to files that Juicebox cannot display (non-images).'),
+      '#empty_option' => $this->t('Do nothing'),
+      '#description' => $this->t('Specify any special handling that should be applied to files that Juicebox cannot display (non-images).'),
     ];
     $form['linkurl_source'] = [
       '#jb_fieldset' => 'advanced',
       '#type' => 'select',
-      '#title' => t("LinkURL Source"),
-      '#description' => t('The linkURL is an image-specific path for accessing each image outside the gallery. This is used by features such as the "Open Image Button".'),
+      '#title' => $this->t("LinkURL Source"),
+      '#description' => $this->t('The linkURL is an image-specific path for accessing each image outside the gallery. This is used by features such as the "Open Image Button".'),
       '#options' => ['image_styled' => 'Main Image - Styled (use this gallery\'s main image style setting)'],
-      '#empty_option' => t('Main Image - Unstyled (original image)'),
+      '#empty_option' => $this->t('Main Image - Unstyled (original image)'),
     ];
     $form['linkurl_target'] = [
       '#jb_fieldset' => 'advanced',
       '#type' => 'select',
-      '#title' => t('LinkURL Target'),
+      '#title' => $this->t('LinkURL Target'),
       '#options' => [
-        '_blank' => '_blank',
-        '_self' => '_self',
-        '_parent' => '_parent',
-        '_top' => '_top',
+        '_blank' => $this->t('_blank'),
+        '_self' => $this->t('_self'),
+        '_parent' => $this->t('_parent'),
+        '_top' => $this->t('_top'),
       ],
-      '#description' => t('Specify a target for any links that make user of the image linkURL.'),
+      '#description' => $this->t('Specify a target for any links that make user of the image linkURL.'),
     ];
     $form['custom_parent_classes'] = [
       '#jb_fieldset' => 'advanced',
       '#type' => 'textfield',
-      '#title' => t('Custom Classes for Parent Container'),
-      '#description' => t('Define any custom classes that should be added to the parent container within the Juicebox embed markup.<br/>This can be handy if you want to apply more advanced styling or dimensioning rules to this gallery via CSS. Enter as space-separated values.'),
+      '#title' => $this->t('Custom Classes for Parent Container'),
+      '#description' => $this->t('Define any custom classes that should be added to the parent container within the Juicebox embed markup.<br/>This can be handy if you want to apply more advanced styling or dimensioning rules to this gallery via CSS. Enter as space-separated values.'),
     ];
     // Set values that are directly related to each key.
     foreach ($form as $conf_key => &$conf_value) {
@@ -623,7 +625,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     $presets = image_style_options(FALSE);
     // If multisize is allowed, include it with the normal styles.
     if ($allow_multisize && !in_array('juicebox_multisize_image_style', $library['disallowed_conf'])) {
-      $presets = ['juicebox_multisize' => t('Juicebox PRO multi-size (adaptive)')] + $presets;
+      $presets = ['juicebox_multisize' => $this->t('Juicebox PRO multi-size (adaptive)')] + $presets;
     }
     return $presets;
   }

@@ -5,6 +5,7 @@ namespace Drupal\Tests\juicebox\Functional;
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the Juicebox field formatter.
@@ -80,7 +81,7 @@ class JuiceboxFieldFormatterCase extends JuiceboxCaseTestBase {
       'fields[' . $this->instFieldName . '][settings_edit_form][settings][title_source]' => 'title',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText(t('Your settings have been saved.'), 'Gallery configuration changes saved.');
+    $this->assertText($this->t('Your settings have been saved.'), 'Gallery configuration changes saved.');
     // Get the urls to the image and thumb derivatives expected.
     $uri = File::load($node->{$this->instFieldName}[0]->target_id)->getFileUri();
     $test_formatted_image_url = file_create_url($uri);

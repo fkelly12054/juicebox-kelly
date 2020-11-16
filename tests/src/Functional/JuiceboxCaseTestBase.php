@@ -55,7 +55,10 @@ abstract class JuiceboxCaseTestBase extends BrowserTestBase {
    */
   protected function initNode() {
     // Create a new content type.
-    $this->drupalCreateContentType(['type' => $this->instBundle, 'name' => $this->instBundle]);
+    $this->drupalCreateContentType([
+      'type' => $this->instBundle,
+      'name' => $this->instBundle,
+    ]);
     // Prep a field base.
     $field_storage_settings = [
       'display_field' => TRUE,

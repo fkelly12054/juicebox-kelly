@@ -384,7 +384,7 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
         $text_source_options['description'] = $this->t('File - Description text (processed by fallback text format)');
       }
     }
-    // @todo: Add support for fieldable file entities and/or media entities.
+    // @todo Add support for fieldable file entities and/or media entities.
     return $text_source_options;
   }
 
@@ -414,7 +414,10 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
       $entity_properties = $item->entity->toArray();
       if (isset($entity_properties[$source])) {
         // A processed_text render array will utilize text filters on rendering.
-        $text_to_build = ['#type' => 'processed_text', '#text' => $item->entity->get($source)->value];
+        $text_to_build = [
+          '#type' => 'processed_text',
+          '#text' => $item->entity->get($source)->value,
+        ];
         return $this->renderer->render($text_to_build);
       }
     }
@@ -425,10 +428,13 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     // plain values.
     if (isset($item->{$source}) && is_string($item->{$source})) {
       // A processed_text render array will utilize text filters on rendering.
-      $text_to_build = ['#type' => 'processed_text', '#text' => $item->{$source}];
+      $text_to_build = [
+        '#type' => 'processed_text',
+        '#text' => $item->{$source},
+      ];
       return $this->renderer->render($text_to_build);
     }
-    // @todo: Add support for fieldable file entities and/or media entities.
+    // @todo Add support for fieldable file entities and/or media entities.
     return '';
   }
 

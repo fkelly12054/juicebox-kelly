@@ -109,13 +109,14 @@ class JuiceboxFileCase extends JuiceboxCaseTestBase {
       'fields[' . $this->instFieldName . '][settings_edit_form][settings][incompatible_file_action]' => 'skip',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText(t('Your settings have been saved.'), 'Gallery configuration changes saved.');
+    $savemsg = $this->t('Your settings have been saved.'. 'Gallery configuration changes saved.');
+    $this->assertText($savemsg);
     // Re-check the XML. This time no image should appear at all.
     $this->drupalLogout();
     $this->drupalGet('juicebox/xml/field/node/' . $node->id() . '/' . $this->instFieldName . '/full');
     $this->assertRaw('<?xml version="1.0" encoding="UTF-8"?>', 'Valid XML detected.');
     $this->assertNoRaw('<image', 'Non-image items was skipped.');
-    // @todo, Check other incompatible_file_action combinations.
+    // @todo , Check other incompatible_file_action combinations.
   }
 
 }

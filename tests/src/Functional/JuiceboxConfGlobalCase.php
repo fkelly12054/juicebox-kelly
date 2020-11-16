@@ -4,6 +4,7 @@ namespace Drupal\Tests\juicebox\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests global configuration logic for Juicebox galleries.
@@ -12,7 +13,7 @@ use Drupal\Component\Utility\Html;
  */
 class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
 
-  // @todo: Reactivate config_translation when issue #2573975 is resolved.
+  // @todo Reactivate config_translation when issue #2573975 is resolved.
   /**
    * Public static $modules = array('node', 'field_ui', 'image', 'juicebox');.
    *
@@ -26,7 +27,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
   public function setUp() {
     parent::setUp();
     // Create and login user.
-    // @todo: Reactivate translation perms when issue #2573975 is resolved.
+    // @todo Reactivate translation perms when issue #2573975 is resolved.
     // $this->webUser = $this->drupalCreateUser(array('access content', 'access
     // administration pages', 'administer site configuration', 'administer
     // content types', 'administer nodes', 'administer node fields', 'administer
@@ -69,7 +70,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
     ];
     $this->drupalGet('admin/config/media/juicebox');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText(t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
+    $this->assertText($this->t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
     // Now check the resulting XML again as an anon user.
     $this->drupalLogout();
     $this->drupalGet('juicebox/xml/field/node/' . $node->id() . '/' . $this->instFieldName . '/full');
@@ -81,7 +82,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
   /**
    * Test global Juicebox interface translation settings.
    *
-   * @todo: Reactivate this test when issue #2573975 is resolved.
+   * @todo Reactivate this test when issue #2573975 is resolved.
    */
   public function voidtestGlobalTrans() {
     $node = $this->node;
@@ -103,7 +104,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
     ];
     $this->drupalGet('admin/config/media/juicebox');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText(t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
+    $this->assertText($this->t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
     // We need to set a translation for our languagelist string. There is
     // probably a good way to do this directly in code, but for now it's fairly
     // easy to just brute-force it via the UI. First we need to visit the
@@ -123,7 +124,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
       'strings[' . $matches[1] . '][translations][0]' => 'Translated|Lang|List',
     ];
     $this->submitForm($edit, 'Save translations');
-    $this->assertText(t('The strings have been saved'), 'Languagelist translation saved.');
+    $this->assertText($this->t('The strings have been saved'), 'Languagelist translation saved.');
     // Now check the resulting XML again as an anon user.
     $this->drupalLogout();
     $this->drupalGet('juicebox/xml/field/node/' . $node->id() . '/' . $this->instFieldName . '/full');
@@ -149,7 +150,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
     ];
     $this->drupalGet('admin/config/media/juicebox');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText(t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
+    $this->assertText($this->t('The Juicebox configuration options have been saved'), 'Custom global options saved.');
     // Alter field formatter specific settings to use multi-size style.
     $this->drupalGet('admin/structure/types/manage/' . $this->instBundle . '/display');
     $this->submitForm([], $this->instFieldName . '_settings_edit', 'entity-view-display-edit-form');
@@ -157,7 +158,7 @@ class JuiceboxConfGlobalCase extends JuiceboxCaseTestBase {
       'fields[' . $this->instFieldName . '][settings_edit_form][settings][image_style]' => 'juicebox_multisize',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText(t('Your settings have been saved.'), 'Gallery configuration changes saved.');
+    $this->assertText($this->t('Your settings have been saved.'), 'Gallery configuration changes saved.');
     // Calculate the multi-size styles that should be found in the XML.
     $uri = File::load($node->{$this->instFieldName}[0]->target_id)->getFileUri();
     $formatted_image_small = entity_load('image_style', 'juicebox_small')->buildUrl($uri);

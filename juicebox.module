@@ -53,13 +53,17 @@ function juicebox_theme_suggestions_field_alter(array &$suggestions, array $vari
 }
 
 /**
- * Builds library variable depending on version of library in
- * sites/all/libraries/juicebox or /library
- * @param mixed $librarypath
+ * Builds library variable depending on version of library.
+ *
+ * Library can be in sites/all/libraries/juicebox or /library.
+ *
+ * param mixed $librarypath
+ *   The path to the library.
+ *
  * @param mixed $library
+ *   The name of the library.
  */
-function juicebox_build_library_array($librarypath, &$library)
-{
+function juicebox_build_library_array($librarypath, &$library) {
   $options = [
     'file' => 'juicebox.js',
     'pattern' => '/Juicebox.([a-zA-Z]+[0-9\.\ -]+)/',
@@ -72,14 +76,14 @@ function juicebox_build_library_array($librarypath, &$library)
   $library['version arguments'] = [
     'file' => 'juicebox.js',
     'pattern' => '/Juicebox.([a-zA-Z]+[0-9\.\ -]+)/',
-    'lines' => 5
+    'lines' => 5,
   ];
   $library['files'] = [
     // Note that we do not want the Juicebox library javascript to be
     // aggregated by Drupal (set preprocess option = FALSE). This is because
     // some supporting library CSS files must be at a specific location
     // RELATIVE to to the main js file. Aggregation breaks this.
-    'js' => ['juicebox.js' => ['preprocess' => FALSE, 'group' => JS_LIBRARY]]
+    'js' => ['juicebox.js' => ['preprocess' => FALSE, 'group' => JS_LIBRARY]],
   ];
   $library['module'] = 'juicebox';
   $library['machine name'] = 'juicebox';
