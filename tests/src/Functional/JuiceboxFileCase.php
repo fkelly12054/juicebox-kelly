@@ -109,7 +109,7 @@ class JuiceboxFileCase extends JuiceboxCaseTestBase {
       'fields[' . $this->instFieldName . '][settings_edit_form][settings][incompatible_file_action]' => 'skip',
     ];
     $this->submitForm($edit, 'Save');
-    $savemsg = $this->t('Your settings have been saved.'. 'Gallery configuration changes saved.');
+    $savemsg = $this->t('Gallery configuration changes saved.');
     $this->assertText($savemsg);
     // Re-check the XML. This time no image should appear at all.
     $this->drupalLogout();

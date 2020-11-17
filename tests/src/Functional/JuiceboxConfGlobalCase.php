@@ -4,7 +4,6 @@ namespace Drupal\Tests\juicebox\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests global configuration logic for Juicebox galleries.

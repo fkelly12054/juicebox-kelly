@@ -5,7 +5,6 @@ namespace Drupal\Tests\juicebox\Functional;
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the Juicebox field formatter.

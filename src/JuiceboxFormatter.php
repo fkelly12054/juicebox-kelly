@@ -13,7 +13,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to define a Drupal service with common formatter methods.
@@ -133,7 +132,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     if ($gallery instanceof JuiceboxGalleryInterface) {
       return $gallery;
     }
-    throw new \Exception('Cound not instantiate Juicebox gallery.');
+    throw new \Exception('Could not instantiate Juicebox gallery.');
   }
 
   /**
@@ -147,26 +146,6 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * {@inheritdoc}
    */
   public function getLibrary($force_local = FALSE, $reset = FALSE) {
-    // We use our own static cache to lazy-load the lib. Libraries API detection
-    // has a static cache, but as we may be bypassing full local detection in
-    // certain situations, we can't always use it.
-    $library = &self::$library;
-    if (!$library || $reset) {
-      // See if we have been passed version details in the URL. If so we bypass
-      // local detection and build our own libraries array.
-      $query = \Drupal::request()->query->all();
-      var_dump($query);
-      if (!empty($query['jb-version']) && !$force_local) {
-        $version_number = Html::escape($query['jb-version']);
-        if (!empty($query['jb-pro'])) {
-          $library['pro'] = TRUE;
-          $version = 'Pro';
-        }
-        else {
-          $version = 'Lite';
-        }
-      }
-    }
     // We "default" to sites/all/libraries and that will override
     // anything in /libraries. Rationale is that sites/all/libraries
     // was the original location for these files theoretically,
