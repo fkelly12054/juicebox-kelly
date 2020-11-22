@@ -6,18 +6,20 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to define a Drupal service with common formatter methods.
  */
 class JuiceboxFormatter implements JuiceboxFormatterInterface {
+  use StringTranslationTrait;
 
   /**
    * A Drupal configuration factory service.
@@ -25,13 +27,6 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
-
-  /**
-   * A Drupal string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $stringTranslation;
 
   /**
    * A Drupal URL generator service.
@@ -75,6 +70,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    */
   protected $messenger;
 
+
   /**
    * Constructor.
    *
@@ -94,9 +90,9 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger_interface
    *   The messenger interface.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack, MessengerInterface $messenger_interface) {
+  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack, MessengerInterface $messenger_interface) {
     $this->configFactory = $config_factory;
-    $this->stringTranslation = $translation;
+    $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
     $this->moduleManager = $module_manager;
     $this->currentPathStack = $currentPathStack;
@@ -178,7 +174,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     if ($global_settings['translate_interface']) {
       $base_string = $global_settings['base_languagelist'];
       if (!empty($base_string)) {
-        $gallery->addOption('languagelist', Html::escape($this->stringTranslation->translate($base_string)), FALSE);
+        $gallery->addOption('languagelist', Html::escape($this->t($base_string)), FALSE);
       }
     }
     // Allow other modules to alter the built gallery data before it's

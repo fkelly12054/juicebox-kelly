@@ -6,11 +6,15 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides dynamic contextual links for Juicebox field conf editing.
  */
 class JuiceboxConfFieldContextualLinks extends DeriverBase implements ContainerDeriverInterface {
+
+  use StringTranslationTrait;
 
   /**
    * A Drupal entity type manager service.
@@ -24,9 +28,12 @@ class JuiceboxConfFieldContextualLinks extends DeriverBase implements ContainerD
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   *   A string translation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -37,7 +44,8 @@ class JuiceboxConfFieldContextualLinks extends DeriverBase implements ContainerD
     // services from the container and inject them into our deriver via its own
     // constructor as needed.
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('string_translation')
     );
   }
 
