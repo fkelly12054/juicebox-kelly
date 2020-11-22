@@ -28,7 +28,7 @@ class JuiceboxConfFieldContextualLinks extends DeriverBase implements ContainerD
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   A string translation service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
