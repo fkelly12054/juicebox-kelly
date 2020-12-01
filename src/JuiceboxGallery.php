@@ -297,7 +297,7 @@ class JuiceboxGallery implements JuiceboxGalleryInterface {
       'debugmode',
     ];
     $current_options = $this->getOptions(TRUE);
-    foreach ($load_before_xml as $key => $option) {
+    foreach ($load_before_xml as $option) {
       if (!empty($current_options[$option])) {
         $vars[$option] = $current_options[$option];
       }

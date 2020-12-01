@@ -275,7 +275,7 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     // Get settings.
     $settings = $this->getSettings();
     // Iterate over items and extract image data.
-    foreach ($items as $delta => $item) {
+    foreach ($items as $item) {
       if ($item->isDisplayed() && !empty($item->target_id)) {
         // Calculate the source data that Juicebox requires.
         $src_data = $this->juicebox->styleImageSrcData($item->entity, $settings['image_style'], $item->entity, $settings['thumb_style'], $settings);
@@ -410,7 +410,6 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     // If the text source is the filename we need to get the data from the
     // item's related file entity.
     if ($source == 'filename' && isset($item->entity)) {
-      $entity = $item->entity;
       $entity_properties = $item->entity->toArray();
       if (isset($entity_properties[$source])) {
         // A processed_text render array will utilize text filters on rendering.
