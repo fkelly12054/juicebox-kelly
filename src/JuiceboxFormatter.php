@@ -11,9 +11,10 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\file\FileInterface;
-use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageStyleInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Class to define a Drupal service with common formatter methods.
@@ -70,6 +71,12 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    */
   protected $messenger;
 
+  /**
+   * A Drupal entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Constructor.
@@ -77,7 +84,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The Drupal config factory that can be used to derive global Juicebox
    *   settings.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   A string translation service.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   A URL generator service.
@@ -89,8 +96,11 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    *   The Symfony request stack from which to extract the current request.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger_interface
    *   The messenger interface.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack, MessengerInterface $messenger_interface) {
+  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack,
+  MessengerInterface $messenger_interface, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
@@ -98,6 +108,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     $this->currentPathStack = $currentPathStack;
     $this->request = $request_stack->getCurrentRequest();
     $this->messenger = $messenger_interface;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -174,7 +185,8 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     if ($global_settings['translate_interface']) {
       $base_string = $global_settings['base_languagelist'];
       if (!empty($base_string)) {
-        $gallery->addOption('languagelist', Html::escape($this->t($base_string)), FALSE);
+        $base_string = Html::escape($base_string);
+        $gallery->addOption('languagelist', $base_string, FALSE);
       }
     }
     // Allow other modules to alter the built gallery data before it's
@@ -330,7 +342,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       }
       foreach ($sizes as $size => $style_each) {
         if (!empty($style_each)) {
-          $style_obj = ImageStyle::load($style_each);
+          $style_obj = $this->entityTypeManager->getStorage('image_style')->load($style_each);
           if ($style_obj) {
             $image_data[$size] = $style_obj->buildUrl($file->getFileUri());
           }

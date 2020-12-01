@@ -59,7 +59,6 @@ class JuiceboxSubRequestCase extends JuiceboxCaseTestBase {
   // list above, to use the "standard" profile's article type for this test
   // instead of the one we create manually (should also work, but will be slow).
   // protected $profile = 'standard';.
-
   /**
    * Define setup tasks.
    */
