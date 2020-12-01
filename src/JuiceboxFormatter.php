@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\file\FileInterface;
-use Drupal\image\ImageStyleInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -402,7 +401,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
           // values.
           $matches = [];
           preg_match('/^([A-Za-z0-9]+?)="([^"]+?)"$/u', $option, $matches);
-          list($full_match, $name, $value) = $matches;
+          list($name, $value) = $matches;
           $gallery->addOption(mb_strtolower($name), Html::escape($value));
         }
       }
