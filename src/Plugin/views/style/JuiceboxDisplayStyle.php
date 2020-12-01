@@ -228,7 +228,6 @@ class JuiceboxDisplayStyle extends StylePluginBase {
     $view = $this->view;
     $settings = $this->options;
     $display_name = isset($view->current_display) ? $view->current_display : 'default';
-    $view_args = empty($view->args) ? [] : $view->args;
     // Generate xml details.
     $xml_route_info = [
       'route_name' => 'juicebox.xml_viewsstyle',
