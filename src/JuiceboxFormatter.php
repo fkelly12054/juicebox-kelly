@@ -341,6 +341,43 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       }
       foreach ($sizes as $size => $style_each) {
         if (!empty($style_each)) {
+            /* D4K0 comments: ImageStyle dependency injection.
+             *
+             * 1) This is pretty dirty - ImageStyle::load($style_each).
+             * OOP best practices say: avoid of static class method calls
+             * if possible. Use dependency injection instead!
+             *
+             * 2) This $this->ImageStyle is a nice attempt, still not clean
+             * enough.
+             *
+             * PROPOSALS:
+             * Needs refactoring.
+             *
+             * We need to roll back the last attempt to inject ImageStyle and
+             * re-inject it properly.
+             *
+             * ImageStyle by its definition is the config entity.
+             * @see https://api.drupal.org/api/drupal/core%21modules%21image%21src%21Entity%21ImageStyle.php/class/ImageStyle/9.1.x
+             *
+             * As you can see in ImageStyle plugin anotation source code,
+             * luckily it registers own storage handler service :)
+             * That's it!
+             *
+             * All we need to do is inject entity type manager service into
+             * JuiceboxFormatter class instead of injecting ImageStyle directly.
+             *
+             * And then change lines
+             *
+             * //$style_obj = ImageStyle::load($style_each);
+             * $style_obj = $this->ImageStyle;
+             *
+             * to something like this:
+             *
+             * $style_obj = $this->entityTypeManager->getStorage('image_style')
+             *   ->load($style_each)->buildUrl($path);
+             *
+             * I'll try to fix it soon.
+             **/
  //         $style_obj = ImageStyle::load($style_each);
             $style_obj = $this->ImageStyle;
            if ($style_obj) {
