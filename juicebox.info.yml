@@ -10,6 +10,6 @@ dependencies:
   - drupal:image
 
 # Information added by Drupal.org packaging script on 2020-10-09
-version: '8.x-2.0-beta4+1-dev'
-project: 'juicebox'
-datestamp: 1602262991
+version:
+project:
+datestamp:
