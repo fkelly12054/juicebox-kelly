@@ -14,6 +14,7 @@ use Drupal\file\FileInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Class to define a Drupal service with common formatter methods.
@@ -71,11 +72,11 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
   protected $messenger;
 
   /**
-   * The imagestyle.
+   * A Drupal entity type manager service.
    *
-   * @var \Drupal\image\Entity\ImageStyle
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $ImageStyle;
+  protected $entityTypeManager;
 
   /**
    * Constructor.
@@ -95,11 +96,11 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    *   The Symfony request stack from which to extract the current request.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger_interface
    *   The messenger interface.
-   * @param \Drupal\image\Entity\ImageStyle $ImageStyle
-   *   The ImageSyle
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
   public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack,
-  MessengerInterface $messenger_interface, ImageStyle $ImageStyle) {
+  MessengerInterface $messenger_interface, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
@@ -107,7 +108,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     $this->currentPathStack = $currentPathStack;
     $this->request = $request_stack->getCurrentRequest();
     $this->messenger = $messenger_interface;
-    $this->ImageStyle = $ImageStyle;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -341,46 +342,8 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
       }
       foreach ($sizes as $size => $style_each) {
         if (!empty($style_each)) {
-            /* D4K0 comments: ImageStyle dependency injection.
-             *
-             * 1) This is pretty dirty - ImageStyle::load($style_each).
-             * OOP best practices say: avoid of static class method calls
-             * if possible. Use dependency injection instead!
-             *
-             * 2) This $this->ImageStyle is a nice attempt, still not clean
-             * enough.
-             *
-             * PROPOSALS:
-             * Needs refactoring.
-             *
-             * We need to roll back the last attempt to inject ImageStyle and
-             * re-inject it properly.
-             *
-             * ImageStyle by its definition is the config entity.
-             * @see https://api.drupal.org/api/drupal/core%21modules%21image%21src%21Entity%21ImageStyle.php/class/ImageStyle/9.1.x
-             *
-             * As you can see in ImageStyle plugin anotation source code,
-             * luckily it registers own storage handler service :)
-             * That's it!
-             *
-             * All we need to do is inject entity type manager service into
-             * JuiceboxFormatter class instead of injecting ImageStyle directly.
-             *
-             * And then change lines
-             *
-             * //$style_obj = ImageStyle::load($style_each);
-             * $style_obj = $this->ImageStyle;
-             *
-             * to something like this:
-             *
-             * $style_obj = $this->entityTypeManager->getStorage('image_style')
-             *   ->load($style_each)->buildUrl($path);
-             *
-             * I'll try to fix it soon.
-             **/
- //         $style_obj = ImageStyle::load($style_each);
-            $style_obj = $this->ImageStyle;
-           if ($style_obj) {
+          $style_obj = $this->entityTypeManager->getStorage('image_style')->load($style_each);
+          if ($style_obj) {
             $image_data[$size] = $style_obj->buildUrl($file->getFileUri());
           }
         }
