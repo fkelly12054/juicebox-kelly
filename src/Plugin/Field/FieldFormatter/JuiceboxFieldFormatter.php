@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
+use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -25,11 +25,12 @@ use Drupal\Core\Url;
  *   label = @Translation("Juicebox Gallery"),
  *   field_types = {
  *     "image",
- *     "file"
+ *     "file",
+ *     "entity_reference"
  *   },
  * )
  */
-class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
+class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**
    * A Juicebox formatter service.
@@ -276,6 +277,9 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     $settings = $this->getSettings();
     // Iterate over items and extract image data.
     foreach ($items as $item) {
+      if ($item->getPluginId() === 'field_item:entity_reference') {
+        $item = $item->entity->field_media_image[0];
+      }
       if ($item->isDisplayed() && !empty($item->target_id)) {
         // Calculate the source data that Juicebox requires.
         $src_data = $this->juicebox->styleImageSrcData($item->entity, $settings['image_style'], $item->entity, $settings['thumb_style'], $settings);
@@ -364,7 +368,7 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     // view row). In this case the instance data is most likely fake, and cannot
     // tell us anything about what field options are available. When this
     // happens we pretend all relevent instance options are active.
-    if ($this->isPseudoInstance()) {
+    if ($this->isPseudoInstance() || $this->isEntityReference()) {
       foreach (['alt_field', 'title_field', 'description_field'] as $value) {
         $field_settings[$value] = TRUE;
       }
@@ -384,7 +388,7 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
         $text_source_options['description'] = $this->t('File - Description text (processed by fallback text format)');
       }
     }
-    // @todo Add support for fieldable file entities and/or media entities.
+
     return $text_source_options;
   }
 
@@ -433,7 +437,7 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
       ];
       return $this->renderer->render($text_to_build);
     }
-    // @todo Add support for fieldable file entities and/or media entities.
+
     return '';
   }
 
@@ -452,5 +456,20 @@ class JuiceboxFieldFormatter extends ImageFormatterBase implements ContainerFact
     }
     return TRUE;
   }
+
+  /**
+   * Helper to check if the field is media and if the target bundle is image.
+   *
+   * @return boolean
+   *   Returns TRUE if the fields is Entity reference and of type image.
+   */
+  protected function isEntityReference() {
+    if ($this->fieldDefinition->getType() != 'entity_reference' &&
+      isset($this->fieldDefinition->getSettings()['handler_settings']['target_bundles'])) {
+        if (array_keys($this->fieldDefinition->getSettings()['handler_settings']['target_bundles'])[0] == 'image') {
+          return true;
+        }
+      }
+    }
 
 }
