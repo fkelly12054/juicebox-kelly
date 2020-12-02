@@ -98,8 +98,14 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_manager, CurrentPathStack $currentPathStack, RequestStack $request_stack,
-  MessengerInterface $messenger_interface, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory,
+  TranslationInterface $string_translation,
+  UrlGeneratorInterface $url_generator,
+  ModuleHandlerInterface $module_manager,
+  CurrentPathStack $currentPathStack,
+  RequestStack $request_stack,
+  MessengerInterface $messenger_interface,
+  EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
