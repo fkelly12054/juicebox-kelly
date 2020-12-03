@@ -86,7 +86,7 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
     // Create a new instance of the plugin. This also allows us to extract
     // services from the container and inject them into our plugin via its own
     // constructor as needed.
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'), $container->get('link_generator'), $container->get('request_stack'), $container->get('juicebox.formatter'), $container->get('renderer'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity_type.manager'), $container->get('link_generator'), $container->get('request_stack'), $container->get('juicebox.formatter'), $container->get('renderer'));
   }
 
   /**
