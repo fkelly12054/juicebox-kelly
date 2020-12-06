@@ -333,7 +333,8 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
       // Calculate a contextual link that can be used to edit the gallery type.
       // @see \Drupal\juicebox\Plugin\Derivative\JuiceboxConfFieldContextualLinks::getDerivativeDefinitions()
       $bundle = $this->fieldDefinition->getTargetBundle();
-      $display_entity = entity_get_display($entity_type_id, $bundle, $this->viewMode);
+      // TODO: entity_display.repository service should be injected into the class as the dependency injection.
+      $display_entity = \Drupal::service('entity_display.repository')->getViewDisplay($entity_type_id, $bundle, $this->viewMode);
       $contextual['juicebox_conf_field_' . $entity_type_id] = [
         'route_parameters' => [
           'view_mode_name' => (!$display_entity->status() || $display_entity->isNew()) ? 'default' : $this->viewMode,
@@ -469,7 +470,7 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
         if (array_keys($this->fieldDefinition->getSettings()['handler_settings']['target_bundles'])[0] == 'image') {
           return true;
         }
-      }
     }
+  }
 
 }
