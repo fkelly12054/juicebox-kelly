@@ -498,7 +498,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackIn
     else {
       $notification_top = $this->t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
       $this->messenger->addError($notification_top);
-      $form['#pre_render'] = ['preRenderFieldsets'];
+      $form['#pre_render'] = [static::class . '::preRenderFieldsets'];
       return $form;
     }
     $form['juicebox_config'] = [
@@ -640,7 +640,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackIn
     }
     // Add a pre render callback that will ensure that the items are nested
     // correctly into fieldsets just before display.
-    $form['#pre_render'] = ['preRenderFieldsets'];
+    $form['#pre_render'] = [static::class . '::preRenderFieldsets'];
     return $form;
   }
 
