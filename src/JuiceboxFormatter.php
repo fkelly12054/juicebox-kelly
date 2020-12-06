@@ -14,11 +14,13 @@ use Drupal\file\FileInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Class to define a Drupal service with common formatter methods.
  */
-class JuiceboxFormatter implements JuiceboxFormatterInterface {
+class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackInterface {
   use StringTranslationTrait;
 
   /**
@@ -114,6 +116,40 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     $this->request = $request_stack->getCurrentRequest();
     $this->messenger = $messenger_interface;
     $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return [
+      'preRenderFieldsets',
+    ];
+  }
+
+  /**
+   * Form pre-render callback.
+   *
+   * Visually render fieldsets without affecting tree-based variable storage.
+   *
+   * This technique/code is taken almost directly from the D7 Views module in
+   * views_ui_pre_render_add_fieldset_markup()
+   *
+   * @param $form
+   */
+  public function preRenderFieldsets($form) {
+    foreach (Element::children($form) as $key) {
+      $element = $form[$key];
+      // In our form builder functions, we added an arbitrary #jb_fieldset
+      // property to any element that belongs in a fieldset. If this form element
+      // has that property, move it into its fieldset.
+      if (isset($element['#jb_fieldset']) && isset($form[$element['#jb_fieldset']])) {
+        $form[$element['#jb_fieldset']][$key] = $element;
+        // Remove the original element this duplicates.
+        unset($form[$key]);
+      }
+    }
+    return $form;
   }
 
   /**
@@ -462,7 +498,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     else {
       $notification_top = $this->t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
       $this->messenger->addError($notification_top);
-      $form['#pre_render'] = ['juicebox_form_pre_render_fieldsets'];
+      $form['#pre_render'] = [static::class . '::preRenderFieldsets'];
       return $form;
     }
     $form['juicebox_config'] = [
@@ -604,7 +640,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface {
     }
     // Add a pre render callback that will ensure that the items are nested
     // correctly into fieldsets just before display.
-    $form['#pre_render'] = ['juicebox_form_pre_render_fieldsets'];
+    $form['#pre_render'] = [static::class . '::preRenderFieldsets'];
     return $form;
   }
 
