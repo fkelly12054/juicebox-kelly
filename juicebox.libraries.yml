@@ -1,5 +1,6 @@
 juicebox:
-  js: {}
+  js:
+    js/juicebox.js: {}
 juicebox.local:
   js:
     js/juicebox_load.js: {}

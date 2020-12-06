@@ -16,6 +16,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\juicebox\JuiceboxFormatterInterface;
 use Drupal\juicebox\JuiceboxGalleryInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityDisplayRepository;
 
 /**
  * Plugin implementation of the 'juicebox' formatter.
@@ -68,15 +69,23 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
   protected $renderer;
 
   /**
+   * The entity_display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepository
+   */
+  protected $entityDisplayRepo;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LinkGeneratorInterface $link_generator, RequestStack $request_stack, JuiceboxFormatterInterface $juicebox, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LinkGeneratorInterface $link_generator, RequestStack $request_stack, JuiceboxFormatterInterface $juicebox, RendererInterface $renderer, EntityDisplayRepository $entity_display_repo) {
     parent::__construct($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['label'], $configuration['view_mode'], $configuration['third_party_settings']);
     $this->entityTypeManager = $entity_type_manager;
     $this->linkGenerator = $link_generator;
     $this->request = $request_stack->getCurrentRequest();
     $this->juicebox = $juicebox;
     $this->renderer = $renderer;
+    $this->entityDisplayRepo = $entity_display_repo;
   }
 
   /**
@@ -86,7 +95,7 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
     // Create a new instance of the plugin. This also allows us to extract
     // services from the container and inject them into our plugin via its own
     // constructor as needed.
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity_type.manager'), $container->get('link_generator'), $container->get('request_stack'), $container->get('juicebox.formatter'), $container->get('renderer'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity_type.manager'), $container->get('link_generator'), $container->get('request_stack'), $container->get('juicebox.formatter'), $container->get('renderer'), $container->get('entity_display.repository'));
   }
 
   /**
@@ -333,7 +342,7 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
       // Calculate a contextual link that can be used to edit the gallery type.
       // @see \Drupal\juicebox\Plugin\Derivative\JuiceboxConfFieldContextualLinks::getDerivativeDefinitions()
       $bundle = $this->fieldDefinition->getTargetBundle();
-      $display_entity = entity_get_display($entity_type_id, $bundle, $this->viewMode);
+      $display_entity = $this->entityDisplayRepo->getViewDisplay($entity_type_id, $bundle, $this->viewMode);
       $contextual['juicebox_conf_field_' . $entity_type_id] = [
         'route_parameters' => [
           'view_mode_name' => (!$display_entity->status() || $display_entity->isNew()) ? 'default' : $this->viewMode,
@@ -469,7 +478,7 @@ class JuiceboxFieldFormatter extends FormatterBase implements ContainerFactoryPl
         if (array_keys($this->fieldDefinition->getSettings()['handler_settings']['target_bundles'])[0] == 'image') {
           return true;
         }
-      }
     }
+  }
 
 }
