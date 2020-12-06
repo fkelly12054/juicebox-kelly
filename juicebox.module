@@ -175,25 +175,3 @@ function juicebox_element_validate_config($element, FormStateInterface $form_sta
   }
 }
 
-/**
- * Form pre-render callback.
- *
- * Visually render fieldsets without affecting tree-based variable storage.
- *
- * This technique/code is taken almost directly from the D7 Views module in
- * views_ui_pre_render_add_fieldset_markup()
- */
-function juicebox_form_pre_render_fieldsets($form) {
-  foreach (Element::children($form) as $key) {
-    $element = $form[$key];
-    // In our form builder functions, we added an arbitrary #jb_fieldset
-    // property to any element that belongs in a fieldset. If this form element
-    // has that property, move it into its fieldset.
-    if (isset($element['#jb_fieldset']) && isset($form[$element['#jb_fieldset']])) {
-      $form[$element['#jb_fieldset']][$key] = $element;
-      // Remove the original element this duplicates.
-      unset($form[$key]);
-    }
-  }
-  return $form;
-}
