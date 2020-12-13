@@ -137,7 +137,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackIn
    *
    * @param $form
    */
-  public function preRenderFieldsets($form) {
+  public static function preRenderFieldsets($form) {
     foreach (Element::children($form) as $key) {
       $element = $form[$key];
       // In our form builder functions, we added an arbitrary #jb_fieldset
