@@ -1,6 +1,9 @@
 juicebox:
   js:
-    js/juicebox.js: {}
+    /libraries/juicebox/juicebox.js: {}
+juicebox.sites:
+  js:
+    /sites/all/libraries/juicebox/juicebox.js: {}
 juicebox.local:
   js:
     js/juicebox_load.js: {}
