@@ -282,7 +282,16 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackIn
       $xml_options = array_merge_recursive(['query' => $xml_query_additions], $xml_route_info['options']);
       $xml_url = $this->urlGenerator->generateFromRoute($xml_route_info['route_name'], $xml_route_info['route_parameters'], $xml_options);
       // Add the main library.
-      $output['#attached']['library'][] = 'juicebox/juicebox';
+      if (file_exists(DRUPAL_ROOT . '/' . 'sites/all/libraries/juicebox/juicebox.js')) {
+        $output['#attached']['library'][] = 'juicebox/juicebox.sites';
+      }
+      elseif (file_exists(DRUPAL_ROOT . '/' . 'libraries/juicebox/juicebox.js')) {
+        $output['#attached']['library'][] = 'juicebox/juicebox';
+      }
+      else {
+        $notification_top = $this->t('The Juicebox Javascript library does not appear to be installed. Please download and install the most recent version of the Juicebox library.');
+        $this->messenger->addError($notification_top);
+      }
       // Add the JS gallery details as Drupal.settings.
       $output['#attached']['drupalSettings']['juicebox'] = [$embed_id => $gallery->getJavascriptVars($xml_url)];
       // Add some local JS (implementing Drupal.behaviors) that will process
