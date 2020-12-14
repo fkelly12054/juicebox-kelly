@@ -450,7 +450,7 @@ class JuiceboxDisplayStyle extends StylePluginBase {
         if (isset($handler->field) && array_key_exists($handler->field, $entity)) {
           $field_definition = $entity[$handler->field];
           $field_type = $field_definition->getType();
-          if ($field_type == 'image' || $field_type == 'file') {
+          if ($field_type == 'image' || $field_type == 'file' || $field_type == 'entity_reference') {
             $field_cardinality = $field_definition->get('cardinality');
             $options['field_options_images'][$viewfield] = $name . ($field_cardinality == 1 ? '' : '*');
             $options['field_options_images_type'][$viewfield] = 'file_field';
