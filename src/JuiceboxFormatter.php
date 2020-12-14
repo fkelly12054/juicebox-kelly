@@ -452,7 +452,7 @@ class JuiceboxFormatter implements JuiceboxFormatterInterface, TrustedCallbackIn
           // values.
           $matches = [];
           preg_match('/^([A-Za-z0-9]+?)="([^"]+?)"$/u', $option, $matches);
-          list($name, $value) = $matches;
+          list(, $name, $value) = $matches;
           $gallery->addOption(mb_strtolower($name), Html::escape($value));
         }
       }
