@@ -98,7 +98,7 @@ class JuiceboxXmlControllerViewsStyle extends JuiceboxXmlControllerBase {
     $query_args = $this->request->query->all();
     foreach ($query_args as $param => $value) {
       if (preg_match('/^arg_[0-9]+$/', $param)) {
-        list($key) = explode('_', $param);
+        list(, $key) = explode('_', $param);
         $args[$key] = $value;
       }
     }
