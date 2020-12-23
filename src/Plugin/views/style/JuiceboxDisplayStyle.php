@@ -137,6 +137,7 @@ class JuiceboxDisplayStyle extends StylePluginBase {
       'caption_field' => ['default' => ''],
       'show_title' => ['default' => 0],
     ]);
+//    var_dump($options);
     return $options;
   }
 
@@ -275,10 +276,12 @@ class JuiceboxDisplayStyle extends StylePluginBase {
    */
   protected function buildGallery(JuiceboxGalleryInterface $gallery) {
     $view = $this->view;
+//    var_dump($view);
     $settings = $this->options;
     // Populate $this->rendered_fields.
     $this->renderFields($view->result);
     // Get all row image data in the format of Drupal file field items.
+//        var_dump($settings);
     $image_items = $thumb_items = $this->getItems($settings['image_field']);
     if ($settings['image_field'] != $settings['thumb_field']) {
       $thumb_items = $this->getItems($settings['thumb_field']);
@@ -362,8 +365,10 @@ class JuiceboxDisplayStyle extends StylePluginBase {
    */
   protected function getItems($source_field) {
     $view = $this->view;
+//    var_dump($view);
     // Get the field source options and make sure the passed-source is valid.
     $source_options = $this->confGetFieldSources();
+
     if (empty($source_options['field_options_images_type'][$source_field])) {
       throw new \Exception('Empty or invalid field source @source detected for Juicebox view-based gallery.', ['@source' => $source_field]);
     }
@@ -374,38 +379,49 @@ class JuiceboxDisplayStyle extends StylePluginBase {
     $items = [];
     // Pass 1 - get the fids based on the source type.
     foreach ($view->result as $row_index => $row) {
+      // note this is a kludge that will only work when there are one or two images
+      // prevents overwriting legitimate fids
+      if ($row_index > 0) {
+        break;
+      }
       switch ($source_type) {
         case 'file_id_field':
-          // The source is a file ID field so we can fetch the fid from row
-          // data directly.
+       //  case file_id_field :
+       // The source is a file ID field so we can fetch the fid from row
+       // data directly.
           $target_id = $view->field[$source_field]->getValue($row);
           if (!empty($target_id) && is_numeric($target_id)) {
             $fids[$row_index] = $target_id;
           }
-          continue 2;
+        continue 2;
 
         case 'file_field':
-          // The source is a file field so we fetch the fid through the
-          // target_id property if the field item.
+       // case 'file_field':
+       // The source is a file field so we fetch the fid through the
+       // target_id property of the field item.
           $target_ids = $view->field[$source_field]->getValue($row, 'target_id');
-          // The target IDs value comes in a mixed format depending on
-          // cardinality. We can only use one ID as each view row can only
-          // reference one image (to ensure appropriate matching with the
-          // thumb/title/caption data already specified on the row).
-          $target_id = is_array($target_ids) ? reset($target_ids) : $target_ids;
-          if (!empty($target_id) && is_numeric($target_id)) {
-            $fids[$row_index] = $target_id;
-          }
+       // old code below ... all the target ids we need are in the first (0th) row
+       // The target IDs value comes in a mixed format depending on
+       // cardinality. We can only use one ID as each view row can only
+       // reference one image (to ensure appropriate matching with the
+       // thumb/title/caption data already specified on the row).
+       //$target_id = $target_ids;
+       //$target_id = is_array($target_ids) ? reset($target_ids) : $target_ids;
+       //if (!empty($target_id) && is_numeric($target_id)) {
+       //  $fids[] = $target_ids[];
+       //}
       }
     }
+//    var_dump($target_ids);
     if (empty($items)) {
       // Bulk load all file entities.
-      $file_entities = $this->entityTypeManager->getStorage('file')->loadMultiple($fids);
+      $file_entities = $this->entityTypeManager->getStorage('file')->loadMultiple($target_ids);
       // Pass 2 - Ensure the file entities are keyed by row.
-      foreach ($fids as $row_index => $fid) {
+      foreach ($target_ids as $row_index => $fid) {
         $items[$row_index] = $file_entities[$fid];
       }
     }
+//    var_dump($items);
     return $items;
   }
 
